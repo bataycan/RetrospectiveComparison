@@ -1,0 +1,13 @@
+name = "VegaGraphs"
+uuid = "f3148f77-a318-4429-ac5c-0120f0b3c220"
+authors = ["Amanda B <ambataycan@miners.utep.edu> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
