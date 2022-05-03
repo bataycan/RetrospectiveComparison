@@ -8,7 +8,7 @@ This Package is completely independent of any existing Moving Average and Binomi
 
 ### TODO
 * automatic selection of m parater
-* subsampling of design grid for higher efficiency 
+* 
 
 
 **References**
