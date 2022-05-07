@@ -29,6 +29,7 @@ mM, test, ttable = movingaverage_best_m(x, y, 1, 6, 1)
 
 
 **References**
+
 Bezanson, J., Karpinski, S., Shah, V. B., & Edelman, A. (2012). Julia: A fast dynamic language for technical computing. ArXiv Preprint ArXiv:1209.5145.
 
 Chatla, S. (2022). Smoothing. CPS 5320 Lecture Notes. El Paso ; University of Texas at El Paso. 
