@@ -5,7 +5,11 @@ module RetrospectiveComparison
     import LinearAlgebra
     import Plots
     import SmoothingSplines
+    import Pkg
+    using Pkg
+    Pkg.add("DataFrames")
 
+    using DataFrames
     using Statistics
     using SmoothingSplines
     using RDatasets
@@ -90,28 +94,39 @@ module RetrospectiveComparison
         n = length(X)
         H = zeros(n, n)
         steps = ((mFinal - mInitial) / mStep) + 1
-        #if isinteger(step) == false
-            #return "Error: Please enter an interval with step size that will allow m to remain an Integer"
-        #end
+        
         steps = Int.(steps)
         mVec = zeros(steps)
+        Ms = zeros(steps)
         #mVec = Vector{Float64}()
         index = 1
+        #Creation of the error table without inserting any values
+        errTable = DataFrame()
         for m in mInitial:mStep:mFinal
             
             Ypred = movingaverage(X, m)
+
+            errVec = zeros(length(Y))
+            for ind in 1:length(errVec)
+                errVec[ind]  = Y[ind] - Ypred[ind]
+            end
+
+            errTable[!,:"m = " * string(m)] = errVec
+
             # test the error between the predicted and actual
             # Using the Mean Standard Deviation
             error = 0
             error = msd(Y, Ypred)
-    
+
             #add error to mVec
+            Ms[index] = m
             mVec[index] = error
             index += 1
         end
         # Locate where the smallest error is and return the optimal m
         loc = argmin(mVec)
         optimalM = mInitial + loc*(mStep) - 1*(mStep)
+        display(plot(Ms, mVec, labels = "Error Trends for Moving Average"))
         return optimalM
     end
 
@@ -120,28 +135,38 @@ module RetrospectiveComparison
         n = length(X)
         H = zeros(n, n)
         steps = ((mFinal - mInitial) / mStep) + 1
-        #if isinteger(step) == false
-            #return "Error: Please enter an interval with step size that will allow m to remain an Integer"
-        #end
+        
         steps = Int.(steps)
         mVec = zeros(steps)
+        Ms = zeros(steps)
         #mVec = Vector{Float64}()
+        errTable = DataFrame()
         index = 1
         for m in mInitial:mStep:mFinal
             
             Ypred = binomial(X, m)
+
+            errVec = zeros(length(Y))
+            for ind in 1:length(errVec)
+                errVec[ind]  = Y[ind] - Ypred[ind]
+            end
+
+            errTable[!,:"m = " * string(m)] = errVec
+
             # test the error between the predicted and actual
             # Using the Mean Standard Deviation
             error = 0
             error = msd(Y, Ypred)
-    
-            #add error to mVec
+
+            #add error to mVec and index the x axis for the plot
+            Ms[index] = m
             mVec[index] = error
             index += 1
         end
         # Locate where the smallest error is and return the optimal m
         loc = argmin(mVec)
         optimalM = mInitial + loc*(mStep) - 1*(mStep)
+        display(plot(Ms, mVec, labels = "Error Trends for Binomial Filtering"))
         return optimalM
     end
 
